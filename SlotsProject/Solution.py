@@ -10,10 +10,12 @@ class Solution:
         Initialize your data structures here
         """
         #init
-        self.model_weights = r'D:\tanishkaka\finalweights.pt'
+        self.model_weights = r'D:\tanishkaka\yebhi.pt'
         self.model = YOLO(self.model_weights)
         self.reader = easyocr.Reader(['en'])
         self.base_path = r'D:\tanishkaka\SlotsProject\Problems'
+    
+    
 
     def get_confidences_and_ocr(self, image_path, class_index, requires_ocr=False):
         # inference the model 
@@ -90,46 +92,47 @@ class Solution:
         Problem contains the name of the set to solve. You can use this to retrieve the images from the set.
         The result should be an array of length 2 with elements of type number (integer / float)
         """
+        image_path=os.path.join(self.base_path,problem,'Image.png')
         image_path1 = os.path.join(self.base_path, problem, 'Test1.png')
         image_path2 = os.path.join(self.base_path, problem, 'Test2.png')
 
         if problem == 'Set1':
-            class_index = 7 
+            class_index =  next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None) #or mention class index explicitly ,doesnt matter
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set2':
-            class_index = 5  
+            class_index = next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None)
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set3':
-            class_index = 8 
+            class_index = next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None)
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set4':
-            class_index = 2  
+            class_index = next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None)
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set5':
-            class_index = 6  
+            class_index = next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None)  
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set6':
-            class_index = 4 
+            class_index = next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None)
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set7':
-            class_index = 1  
+            class_index =next((int(box.cls.item()) for result in self.model(image_path) for box in result.boxes), None)
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set8':
-            class_index = 9 
+            class_index = 9 #cant be precalculated
             _, ocr_result1 = self.get_confidences_and_ocr(image_path1, class_index, requires_ocr=True)
             _, ocr_result2 = self.get_confidences_and_ocr(image_path2, class_index, requires_ocr=True)
             return [ocr_result1, ocr_result2]
