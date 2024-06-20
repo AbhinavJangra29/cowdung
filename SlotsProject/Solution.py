@@ -9,24 +9,25 @@ class Solution:
         """
         Initialize your data structures here
         """
-        self.model_weights = r'D:\tanishkaka\finalweights.pt'  # Update with the actual path to your model weights
+        #init
+        self.model_weights = r'D:\tanishkaka\finalweights.pt'
         self.model = YOLO(self.model_weights)
         self.reader = easyocr.Reader(['en'])
-        self.base_path = r'D:\tanishkaka\SlotsProject\Problems'  # Base path to the problem sets
+        self.base_path = r'D:\tanishkaka\SlotsProject\Problems'
 
     def get_confidences_and_ocr(self, image_path, class_index, requires_ocr=False):
-        # Perform object detection
+        # inference the model 
         results = self.model(image_path)
         
-        # Initialize an empty dictionary to hold class and confidence values
+        # dict to store conf,bbox results
         cls_conf_dict = {}
         cls_bbox_dict = {}
 
-        # Populate the dictionary
+        # fill the dictionary
         for result in results:
-            boxes = result.boxes  # Boxes object for bounding box outputs
+            boxes = result.boxes 
             for c, cf, bbox in zip(boxes.cls, boxes.conf, boxes.xywh):
-                c = int(c.item())  # Convert class to integer
+                c = int(c.item()) 
                 if c in cls_conf_dict:
                     cls_conf_dict[c].append(cf.item())
                     cls_bbox_dict[c].append(bbox.tolist())
@@ -34,7 +35,7 @@ class Solution:
                     cls_conf_dict[c] = [cf.item()]
                     cls_bbox_dict[c] = [bbox.tolist()]
 
-        # Function to get confidence values and calculate the average
+        # multiplt bboxes->multiple confidence->take avg
         def calculate_average_confidence(cls_conf_dict, key):
             confidences = cls_conf_dict.get(key, [])
             if confidences:
@@ -49,7 +50,6 @@ class Solution:
         
         if requires_ocr and average_confidence is not None and class_index in cls_bbox_dict:
             bbox = cls_bbox_dict[class_index][0]
-            # Load the image
             image = cv2.imread(image_path)
             
             # Calculate the top-left corner of the bounding box
@@ -59,13 +59,13 @@ class Solution:
             x2 = int(x_center + width / 2)
             y2 = int(y_center + height / 2)
             
-            # Crop the image
+            # cropped image 
             cropped_image = image[y1:y2, x1:x2]
             
-            # Perform OCR on the cropped image
+            # ocr krdo
             ocr_results = self.reader.readtext(cropped_image)
             
-            # Extract the amount from the OCR results
+            # text 
             amount = ""
             for res in ocr_results:
                 text = res[1]
@@ -94,48 +94,48 @@ class Solution:
         image_path2 = os.path.join(self.base_path, problem, 'Test2.png')
 
         if problem == 'Set1':
-            class_index = 7  # Update class index as needed
+            class_index = 7 
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set2':
-            class_index = 5  # Update class index as needed
+            class_index = 5  
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set3':
-            class_index = 8  # Update class index as needed
+            class_index = 8 
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set4':
-            class_index = 2  # Update class index as needed
+            class_index = 2  
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set5':
-            class_index = 6  # Update class index as needed
+            class_index = 6  
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set6':
-            class_index = 4  # Update class index as needed
+            class_index = 4 
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set7':
-            class_index = 1  # Update class index as needed
+            class_index = 1  
             confidence1, _ = self.get_confidences_and_ocr(image_path1, class_index)
             confidence2, _ = self.get_confidences_and_ocr(image_path2, class_index)
             return [confidence1, confidence2]
         elif problem == 'Set8':
-            class_index = 9  # Update class index as needed
+            class_index = 9 
             _, ocr_result1 = self.get_confidences_and_ocr(image_path1, class_index, requires_ocr=True)
             _, ocr_result2 = self.get_confidences_and_ocr(image_path2, class_index, requires_ocr=True)
             return [ocr_result1, ocr_result2]
         
         else:  # Assume 'Set9'
-            class_index = 3  # Update class index as needed
+            class_index = 3  
             _, ocr_result1 = self.get_confidences_and_ocr(image_path1, class_index, requires_ocr=True)
             _, ocr_result2 = self.get_confidences_and_ocr(image_path2, class_index, requires_ocr=True)
             return [ocr_result1, ocr_result2]
