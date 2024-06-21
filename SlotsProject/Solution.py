@@ -70,8 +70,8 @@ class Solution:
             # text 
             amount = ""
             for res in ocr_results:
-                text = res[1]
-                if any(char.isdigit() for char in text):  # Check if the text contains any digit
+                text = res[1].replace(',', '')  # Remove commas from the detected text
+                if any(char.isdigit() for char in text):
                     amount = text
                     break
             
